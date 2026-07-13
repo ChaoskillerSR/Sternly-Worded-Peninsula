@@ -38,10 +38,6 @@ local function getCurrentCheck()
         return nil
     end
 
-    --------------------------------------------------
-    -- Combat rewards
-    --------------------------------------------------
-
     if AP.currentCombatReward then
         local check = AP.resolveCheckName()
 
@@ -54,17 +50,11 @@ local function getCurrentCheck()
         return persistent.archipelago.currentCombatCheck
     end
 
-    --------------------------------------------------
-    -- Chapel ruins
-    --------------------------------------------------
 
     if location.type == "chapel_ruin" then
         return AP.resolveCheckName(location)
     end
 
-    --------------------------------------------------
-    -- Chest nodes
-    --------------------------------------------------
 
     if location.type == "chest" and location.parentNode then
 
@@ -115,17 +105,6 @@ function M.installRewardHooks()
         if not checkName then
             print("[AP] No check resolved, refusing fallback")
         end
-
-        -- if not checkName then
-        --     checkName = persistent.archipelago.currentCombatCheck
-
-        --     if checkName then
-        --         print(
-        --             "[AP] Restored combat check from save:",
-        --             checkName
-        --         )
-        --     end
-        -- end
 
         print(
             "[AP] resolved check:",

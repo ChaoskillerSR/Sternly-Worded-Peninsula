@@ -1,5 +1,4 @@
 return {
-
     nexusCharge = {
 
         name = "Nexus Charge",
@@ -31,5 +30,4 @@ return {
         archipelagoItem = true
 
     }
-
 }

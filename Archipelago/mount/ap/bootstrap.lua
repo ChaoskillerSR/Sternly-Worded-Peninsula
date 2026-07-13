@@ -75,7 +75,6 @@ end
 
 
 function AP.getCurrentCheck()
-
     local loc = AP.currentGameLocation
 
     if not loc then
@@ -109,14 +108,12 @@ function AP.getCurrentCheck()
         checkName
     )
 
-
     if AP.locations[checkName] then
 
         saveFileData('persistentSaveData', persistent)
 
         return checkName
     end
-
 
     print(
         "[AP] No AP check exists:",
@@ -151,10 +148,6 @@ function AP.resolveCheckName(loc)
     local counterKey
     local level = loc.level
 
-    --------------------------------------------------
-    -- Crypt
-    --------------------------------------------------
-
     if loc.type == "crypt" then
 
         prefix = getTierPrefix(
@@ -171,11 +164,6 @@ function AP.resolveCheckName(loc)
                 ["Mid Crypt"] = "midCrypt",
                 ["Late Crypt"] = "lateCrypt",
             })[prefix]
-
-
-    --------------------------------------------------
-    -- Chapel ruins (graveyard checks)
-    --------------------------------------------------
 
     elseif loc.type == "chapel_ruin" then
 
@@ -198,11 +186,6 @@ function AP.resolveCheckName(loc)
                 })[prefix]
         end
 
-
-    --------------------------------------------------
-    -- Spider forests
-    --------------------------------------------------
-
     elseif loc.type == "forest"
     or loc.type == "pine_spider_forest"
     or loc.type == "oak_spider_forest" then
@@ -222,10 +205,6 @@ function AP.resolveCheckName(loc)
                 ["Late Spider Forest"] = "lateSpiderForest",
             })[prefix]
 
-
-    --------------------------------------------------
-    -- Bandit camps
-    --------------------------------------------------
 
     elseif loc.type == "banditCamp"
     or loc.type == "bandit_camp_oak"
@@ -247,7 +226,6 @@ function AP.resolveCheckName(loc)
             })[prefix]
     end
 
-
     if not prefix or not counterKey then
             
         print(
@@ -259,22 +237,18 @@ function AP.resolveCheckName(loc)
         return nil
     end
 
-
     local count =
         persistent.archipelago.nexus.checks[counterKey] or 0
 
     count = count + 1
 
-
     local checkName =
         prefix .. " " .. count
-
 
     print(
         "[AP] Candidate check:",
         checkName
     )
-
 
     if AP.locations[checkName] then
 
@@ -288,7 +262,6 @@ function AP.resolveCheckName(loc)
         return checkName
 
     end
-
 
     print(
         "[AP] Check does not exist:",
@@ -324,7 +297,6 @@ function AP.loadSlotData()
     end
 
     if slot.location_items then
-
         for address,item in pairs(slot.location_items) do
             local id = tonumber(address)
 

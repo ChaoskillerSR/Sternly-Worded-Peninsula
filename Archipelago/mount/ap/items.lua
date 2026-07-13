@@ -2,9 +2,6 @@ local M = {}
 
 local utils = require("utils.events")
 
--------------------------------------------------
--- safe AP / utils access
--------------------------------------------------
 local function getClient()
     return _G.AP and _G.AP.client
 end
@@ -17,9 +14,7 @@ local function getGive()
     end
     return utils.getComponent('give')
 end
--------------------------------------------------
--- helper stuff
--------------------------------------------------
+
 M.pendingOverworldItems = {}
 local function applyWhenOverworld(fn)
     if activeModeIs'overworld' then
@@ -29,9 +24,7 @@ local function applyWhenOverworld(fn)
     end
 end
 M.applyWhenOverworld = applyWhenOverworld
--------------------------------------------------
--- item definitions
--------------------------------------------------
+
 M.ITEM_DEFS = {
     [1] = {
         name = "Mid Node Access",
@@ -156,9 +149,7 @@ M.ITEM_DEFS = {
 
 
 }
--------------------------------------------------
--- main entry
--------------------------------------------------
+
 function M.receive(item)
     if not item or not item.index then
         print("[AP] Invalid item received")
@@ -195,9 +186,9 @@ function M.receive(item)
     )
 end
 
--------------------------------------------------
--- optional debug reset
--------------------------------------------------
+
+
+-- debug stuff
 function M.reset()
     received = {}
     print("[AP] item history cleared")

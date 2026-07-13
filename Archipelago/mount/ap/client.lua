@@ -23,10 +23,6 @@ local function S()
     return _G.AP and _G.AP.state
 end
 
--------------------------------------------------
--- CALLBACKS
--------------------------------------------------
-
 client:set_socket_connected_handler(function()
     print("AP socket connected")
 end)
@@ -48,28 +44,6 @@ client:set_slot_connected_handler(function(slot_data)
 
     AP.loadSlotData()
 
-    -- CRITICAL: confirm assignment
-    -- print("STATE UPDATED")
-    -- print("connected:", S().connected)
-    -- print("slot_data:")
-    -- for k, v in pairs(S().slot_data) do
-    --     if k == "locations" then
-    --         print("locations")
-    --         for subKey, subValue in pairs(v) do
-    --             print(subKey, subValue)
-    --         end
-    --     elseif k == "location_items" then
-    --         print("location_data")
-    --         for subKey, subValue in pairs(v) do
-    --             print(subKey, subValue)
-    --         end
-    --     else do
-    --         print(k, v)
-    --     end
-    --     end
-    -- end
-
-    -- DO NOT pass table if your build errors on it
     client:ConnectUpdate(7, {"Lua-APClientPP"})
 end)
 
@@ -77,10 +51,6 @@ client:set_items_received_handler(function(items)
     print("RAW ITEM CALLBACK FIRED", #items)
 
     for _, item in ipairs(items) do
-        -- print("-----")
-        -- for k, v in pairs(item) do
-        --     print(k, v)
-        -- end
         AP.items.receive(item)
     end
 end)

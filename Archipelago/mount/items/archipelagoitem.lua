@@ -1,16 +1,11 @@
 return {
-
     archipelagoItem = {
-
         name = "Archipelago Item",
-
         description =
             "An Archipelago item.",
-
         type = "passive",
 
         purchaseFunction = function()
-
             local item = AP.currentAPReward
 
             if not item then
@@ -47,9 +42,6 @@ return {
         },
 
         cost = 0,
-
         archipelagoItem = true
-
     }
-
 }
