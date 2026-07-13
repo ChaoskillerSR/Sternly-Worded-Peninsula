@@ -34,6 +34,7 @@ function M.getNexusItemPool()
             if validType
             and not item.variantOf
             and not item.archipelagoItem
+            and not item.sortsubtype == "curse"
             and item.purchaseFunction then
 
                 table.insert(pool, name)

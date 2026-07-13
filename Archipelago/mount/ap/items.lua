@@ -147,6 +147,132 @@ M.ITEM_DEFS = {
         end
     },
 
+    [8] = {
+        name = "Angel Tears",
+        apply = function()
+            require("items").give("gracePotion8", "reward")
+        end
+    },
+
+    [9] = {
+        name = "Health Potion",
+        apply = function()
+            require("items").give("healthPotion", "reward")
+        end
+    },
+
+    [10] = {
+        name = "Large Health Potion",
+        apply = function()
+            require("items").give("healthPotionLarge", "reward")
+        end
+    },
+
+    [11] = {
+        name = "Ironskin Potion",
+        apply = function()
+            require("items").give("ironSkin8", "reward")
+        end
+    },
+
+    [12] = {
+        name = "Potion of Clueless Wisdom",
+        apply = function()
+            require("items").give("potionOfCluelessWisdom", "reward")
+        end
+    },
+
+    [13] = {
+        name = "Tile Repellent Potion",
+        apply = function()
+            require("items").give("potionTileRepellent8", "reward")
+        end
+    },
+
+    [14] = {
+        name = "Mysterious Potion",
+        apply = function()
+            require("items").give("randomPotionOld", "reward")
+        end
+    },
+
+    [15] = {
+        name = "Antiserum",
+        apply = function()
+            require("items").give("tileAntiserum6", "reward")
+        end
+    },
+
+    [16] = {
+        name = "Scroll of Infernos",
+        apply = function()
+            require("items").give("scrollOfInferno", "reward")
+        end
+    },
+
+    [17] = {
+        name = "Scroll of Fire",
+        apply = function()
+            require("items").give("scrollFire", "reward")
+        end
+    },
+
+    [18] = {
+        name = "Scroll of Fire Aura",
+        apply = function()
+            require("items").give("scrollFlameAura", "reward")
+        end
+    },
+
+    [19] = {
+        name = "Scroll of Frost Aura",
+        apply = function()
+            require("items").give("scrollFrostAura", "reward")
+        end
+    },
+
+    [20] = {
+        name = "Scroll of Four Heal",
+        apply = function()
+            require("items").give("scrollHeal4", "reward")
+        end
+    },
+
+    [21] = {
+        name = "Scroll of Ice",
+        apply = function()
+            require("items").give("scrollIce", "reward")
+        end
+    },
+
+    [22] = {
+        name = "Scroll of Metal",
+        apply = function()
+            require("items").give("scrollMetal", "reward")
+        end
+    },
+
+    [23] = {
+        name = "Scroll of Gilding",
+        apply = function()
+            require("items").give("scrollGilding", "reward")
+        end
+    },
+
+    [24] = {
+        name = "Scroll of Vipers",
+        apply = function()
+            require("items").give("scrollOfSnek", "reward")
+        end
+    },
+
+    [25] = {
+        name = "Scroll of Turn Undead",
+        apply = function()
+            require("items").give("scrollTurnUndead", "reward")
+        end
+    },
+
 
 }
 
@@ -207,25 +333,25 @@ end
 
 -- function love.keypressed(key)
 --     if key == "f1" then
---         give(1) -- Mid Node Access
+--         give(8) -- Mid Node Access
 
 --     elseif key == "f2" then
---         give(2) -- Late Node Access
+--         give(9) -- Late Node Access
 
 --     elseif key == "f3" then
---         give(3) -- 50 Gold
+--         give(10) -- 50 Gold
 
 --     elseif key == "f4" then
---         give(4) -- 200 Gold
+--         give(11) -- 200 Gold
 
 --     elseif key == "f5" then
---         give(5) -- Nexus Charge
+--         give(12) -- Nexus Charge
 
 --     elseif key == "f6" then
---         give(6) -- Extra Heart
+--         give(13) -- Extra Heart
 
 --     elseif key == "f7" then
---         give(7) -- Extra Gear Slot
+--         give(14) -- Extra Gear Slot
 --     end
 -- end
 

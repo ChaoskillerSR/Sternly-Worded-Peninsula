@@ -3,11 +3,16 @@ local dllPath = os.getenv("APPDATA")
 
 package.cpath = package.cpath .. ";" .. dllPath
 
+local base = os.getenv("APPDATA")
+    .. "\\SternlyWordedAdventures\\mods\\Archipelago\\mount\\ap"
+
+package.path = package.path .. ";" .. base .. "\\?.lua"
+
 local APClient = require("lua-apclientpp")
 local ok, config = pcall(require, "apconfig")
 
 if not ok then
-    error("Missing archipelago_config.lua")
+    error("Missing apconfig.lua")
 end
 
 local client = APClient("swa_test", "Sternly Worded Adventures", config.server)
