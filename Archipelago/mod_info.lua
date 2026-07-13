@@ -1,0 +1,7 @@
+name = 'Sternly Worded Peninsula'
+author = 'Chaoskiller'
+version = '0.1'
+description = 'Archipelago-based multiplayer support.'
+descriptionShort = 'Archipelago-based multiplayer support.'
+icon='mods/archipelago/icon.png'
+colour = '#fff'
