@@ -255,7 +255,7 @@ M.ITEM_DEFS = {
     [23] = {
         name = "Scroll of Gilding",
         apply = function()
-            require("items").give("scrollGilding", "reward")
+            require("items").give("scrollOfGilding", "reward")
         end
     },
 

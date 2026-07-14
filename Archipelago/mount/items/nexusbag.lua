@@ -8,13 +8,16 @@ return {
 
         description = "Spend a Nexus Charge to retrieve one random item.",
 
-        type = "gear",
+        type = "passive",
         
         class = {},
 
         sources = {
-            combatReward = true
+            combatReward = true,
+            churchStock = 'loot'
         },
+
+        cost = 0,
 
         usefulness = {
             overworld = true,
