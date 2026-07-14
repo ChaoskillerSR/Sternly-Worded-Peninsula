@@ -1,5 +1,5 @@
 return {
-    server = "archipelago.gg:38281",
+    server = "archipelago.gg:37259",
     slot = "ChaoskillerSWA",
     password = "",
 }

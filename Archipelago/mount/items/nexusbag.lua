@@ -57,6 +57,8 @@ return {
                         itemFunctions.give(item, "reward")
 
                         setActiveMode(mode)
+                        
+                        persistent.archipelago.nexus.nexusSatchelObtainedItemsList[item] = true
 
                         if mode.save then
                             mode:save()

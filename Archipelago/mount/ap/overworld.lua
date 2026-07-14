@@ -115,11 +115,12 @@ function M.installOverworldHooks(overworld)
             moddedItemFunctions.getMaxNexusCharges()
         )
 
+        local persistentAPSaveData = persistent.archipelago
+        persistentAPSaveData.nexus.nexusSatchelObtainedItemsList = {}
 
         itemFunctions.applyWhenOverworld(function()
 
             local persistentAPSaveData = persistent.archipelago
-
 
             if persistentAPSaveData.extraHearts > 0 then
 

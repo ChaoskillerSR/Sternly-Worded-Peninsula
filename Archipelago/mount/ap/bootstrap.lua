@@ -376,6 +376,7 @@ persistent.archipelago.nexus or {
         lateBanditCamp = 0,
     }
 }
+persistent.archipelago.nexus.nexusSatchelObtainedItemsList = persistent.archipelago.nexus.nexusSatchelObtainedItemsList or {}
 persistent.archipelago.pendingItems = persistent.archipelago.pendingItems or {}
 persistent.archipelago.receivedItems = persistent.archipelago.receivedItems or {}
 persistent.archipelago.pendingCombatCheck = persistent.archipelago.pendingCombatCheck or nil
