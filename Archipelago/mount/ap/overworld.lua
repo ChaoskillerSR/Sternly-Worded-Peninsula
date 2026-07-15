@@ -117,6 +117,8 @@ function M.installOverworldHooks(overworld)
 
         local persistentAPSaveData = persistent.archipelago
         persistentAPSaveData.nexus.nexusSatchelObtainedItemsList = {}
+        persistentAPSaveData.nexus.nexusSatchelObtainedItemsList['bedroll'] = true
+        persistentAPSaveData.nexus.nexusSatchelObtainedItemsList['turboSnail'] = true
 
         itemFunctions.applyWhenOverworld(function()
 

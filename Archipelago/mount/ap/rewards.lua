@@ -13,7 +13,11 @@ local function getCurrentCheck()
         location.parentNode and location.parentNode.type,
         location.parentNode and location.parentNode.level
     )
-    
+
+    if not location then
+        return nil
+    end
+
     if location.type == "crypt" then
         return AP.resolveCheckName(location)
     end
@@ -23,19 +27,19 @@ local function getCurrentCheck()
         local parent = location.parentNode
 
         if parent.type == "pine_spider_forest"
+        or parent.type == "corrupt_pine_spider_forest"
+        or parent.type == "corrupt_oak_spider_forest"
         or parent.type == "oak_spider_forest" then
 
             return AP.resolveCheckName(parent)
 
         elseif parent.type == "bandit_camp_pine"
+        or parent.type == "corrupt_bandit_camp_oak"
+        or parent.type == "corrupt_bandit_camp_pine"
         or parent.type == "bandit_camp_oak" then
 
             return AP.resolveCheckName(parent)
         end
-    end
-
-    if not location then
-        return nil
     end
 
     if AP.currentCombatReward then
@@ -51,23 +55,9 @@ local function getCurrentCheck()
     end
 
 
-    if location.type == "chapel_ruin" then
+    if location.type == "chapel_ruin"
+    or location.type == "tomb" then
         return AP.resolveCheckName(location)
-    end
-
-
-    if location.type == "chest" and location.parentNode then
-
-        local parent = location.parentNode.type
-
-        if parent == "pine_spider_forest"
-        or parent == "oak_spider_forest" then
-            return AP.resolveCheckName(location)
-
-        elseif parent == "bandit_camp_pine"
-        or parent == "bandit_camp_oak" then
-            return AP.resolveCheckName(location)
-        end
     end
 
     return nil
@@ -101,7 +91,7 @@ function M.installRewardHooks()
                 persistent
             )
         end
-        
+
         if not checkName then
             print("[AP] No check resolved, refusing fallback")
         end

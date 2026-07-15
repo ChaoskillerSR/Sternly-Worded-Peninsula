@@ -59,7 +59,6 @@ function M.getNexusItemPool()
         addItems(items.getAllOtherItemNames())
     end
 
-    -- Build the current pool by filtering the cached base pool.
     local pool = {}
 
     for _, name in ipairs(cachedPool) do

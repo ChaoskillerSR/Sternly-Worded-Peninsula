@@ -26,103 +26,6 @@ AP.locationItems = {}
 AP.currentAPReward = nil
 
 
-function AP.getCheckCategory(location)
-
-    if location.type == "crypt" then
-
-        if location.level == 1 then
-            return "earlyCrypt", "Early Crypt"
-        elseif location.level == 2 then
-            return "midCrypt", "Mid Crypt"
-        elseif location.level == 3 then
-            return "lateCrypt", "Late Crypt"
-        end
-
-    elseif location.type == "graveyard" then
-
-        if location.level == 1 then
-            return "earlyGraveyard", "Early Graveyard"
-        elseif location.level == 2 then
-            return "midGraveyard", "Mid Graveyard"
-        elseif location.level == 3 then
-            return "lateGraveyard", "Late Graveyard"
-        end
-
-    elseif location.type == "forest" then
-
-        if location.level == 1 then
-            return "earlySpiderForest", "Early Spider Forest"
-        elseif location.level == 2 then
-            return "midSpiderForest", "Mid Spider Forest"
-        elseif location.level == 3 then
-            return "lateSpiderForest", "Late Spider Forest"
-        end
-
-    elseif location.type == "banditCamp" then
-
-        if location.level == 1 then
-            return "earlyBanditCamp", "Early Bandit Camp"
-        elseif location.level == 2 then
-            return "midBanditCamp", "Mid Bandit Camp"
-        elseif location.level == 3 then
-            return "lateBanditCamp", "Late Bandit Camp"
-        end
-
-    end
-
-    return nil
-end
-
-
-function AP.getCurrentCheck()
-    local loc = AP.currentGameLocation
-
-    if not loc then
-        print("[AP] No current location")
-        return nil
-    end
-
-    local counterKey, checkPrefix =
-        AP.getCheckCategory(loc)
-
-    if not counterKey then
-        print("[AP] Unknown location type")
-        return nil
-    end
-
-    local checks =
-        persistent.archipelago.nexus.checks
-
-    checks[counterKey] =
-        checks[counterKey] + 1
-
-
-    local checkName =
-        checkPrefix ..
-        " " ..
-        checks[counterKey]
-
-
-    print(
-        "[AP] Generated check:",
-        checkName
-    )
-
-    if AP.locations[checkName] then
-
-        saveFileData('persistentSaveData', persistent)
-
-        return checkName
-    end
-
-    print(
-        "[AP] No AP check exists:",
-        checkName
-    )
-
-    return nil
-end
-
 local function getTierPrefix(level, early, mid, late)
     if level >= 1 and level <= 3 then
         return early
@@ -165,7 +68,8 @@ function AP.resolveCheckName(loc)
                 ["Late Crypt"] = "lateCrypt",
             })[prefix]
 
-    elseif loc.type == "chapel_ruin" then
+    elseif loc.type == "chapel_ruin"
+    or loc.type == "tomb" then
 
         local parent = loc.parentNode
 
@@ -187,6 +91,8 @@ function AP.resolveCheckName(loc)
         end
 
     elseif loc.type == "forest"
+    or loc.type == "corrupt_pine_spider_forest"
+    or loc.type == "corrupt_oak_spider_forest"
     or loc.type == "pine_spider_forest"
     or loc.type == "oak_spider_forest" then
 
@@ -207,6 +113,8 @@ function AP.resolveCheckName(loc)
 
 
     elseif loc.type == "banditCamp"
+    or loc.type == "corrupt_bandit_camp_oak"
+    or loc.type == "corrupt_bandit_camp_pine"
     or loc.type == "bandit_camp_oak"
     or loc.type == "bandit_camp_pine" then
 
@@ -227,7 +135,7 @@ function AP.resolveCheckName(loc)
     end
 
     if not prefix or not counterKey then
-            
+
         print(
             "[AP] Unsupported location:",
             loc.type,
@@ -343,7 +251,7 @@ function AP.loadSlotData()
         itemCount
     )
 
-    
+
     for name,address in pairs(slot.locations) do
         if type(name) == "string" and type(address) == "number" then
             AP.locations[name] = address
