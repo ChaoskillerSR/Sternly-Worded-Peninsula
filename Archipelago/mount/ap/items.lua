@@ -273,8 +273,80 @@ M.ITEM_DEFS = {
         end
     },
 
+    [26] = {
+        name = "Fire Trap",
+        isTrap = true,
 
+        apply = function()
+            print("[AP] Fire Trap!")
+
+            local rpgview = _G.rpgview
+            local tileboard = _G.tileboard
+
+            if not rpgview then
+                print("[AP] ERROR: rpgview unavailable")
+                return
+            end
+
+            if not tileboard then
+                print("[AP] ERROR: tileboard unavailable")
+                return
+            end
+
+            rpgview.affectPlayerStatus('burn', 1.35 * 3)
+
+            tileboard.queueLetter({
+                '.',
+                {
+                    burn = 2,
+                },
+                burnAlpha = 1,
+                fireAlpha = 1,
+            })
+
+            tileboard.spawnQueuedTiles'random'
+        end
+    },
+
+    [27] = {
+        name = "Board Break Trap",
+        isTrap = true,
+        apply = function()
+            print("Received a board break trap!")
+            tileboard.popBottomRow()
+        end
+    },
+
+    [28] = {
+        name = "Enemy Heal Trap",
+        isTrap = true,
+        apply = function()
+            print("Received an enemy heal trap!")
+            local currentEnemy = rpgview.getCurrentEnemy()
+            currentEnemy.health = currentEnemy.health + (currentEnemy.maxHealth * 0.2)
+        end
+    },
 }
+
+local letterUnlockItemID = 29
+
+for letter in ("ABCDEFGHIJKLMNOPQRSTUVWXYZ"):gmatch"." do
+    M.ITEM_DEFS[letterUnlockItemID] = {
+        name = "Letter Unlock: "..letter.."",
+        isTrap = false,
+        apply = function()
+            print("[AP] Unlocked "..letter.." tiles!")
+            persistent.archipelago.unlockedLetters[letter] = true
+
+            saveFileData(
+                "persistentSaveData",
+                persistent
+            )
+        end
+    }
+    letterUnlockItemID = letterUnlockItemID + 1
+end
+
 
 function M.receive(item)
     if not item or not item.index then
@@ -312,13 +384,11 @@ function M.receive(item)
     )
 end
 
-
-
 -- debug stuff
-function M.reset()
-    received = {}
-    print("[AP] item history cleared")
-end
+-- function M.reset()
+--     received = {}
+--     print("[AP] item history cleared")
+-- end
 
 -- local debug_index = 100000
 
@@ -333,25 +403,13 @@ end
 
 -- function love.keypressed(key)
 --     if key == "f1" then
---         give(8) -- Mid Node Access
+--         give(26) -- Fire Trap
 
 --     elseif key == "f2" then
---         give(9) -- Late Node Access
+--         give(27) -- Board Break Trap
 
 --     elseif key == "f3" then
---         give(10) -- 50 Gold
-
---     elseif key == "f4" then
---         give(11) -- 200 Gold
-
---     elseif key == "f5" then
---         give(12) -- Nexus Charge
-
---     elseif key == "f6" then
---         give(13) -- Extra Heart
-
---     elseif key == "f7" then
---         give(14) -- Extra Gear Slot
+--         give(28) -- Enemy Heal Trap
 --     end
 -- end
 

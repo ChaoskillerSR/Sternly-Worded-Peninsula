@@ -43,10 +43,11 @@ local function getCurrentCheck()
     end
 
     if AP.currentCombatReward then
-        local check = AP.resolveCheckName()
+        local check, key = AP.resolveCheckName()
 
         if check then
             persistent.archipelago.currentCombatCheck = check
+            persistent.archipelago.currentCombatKey = key
             saveFileData("persistentSaveData", persistent)
             return check
         end
@@ -80,8 +81,8 @@ function M.installRewardHooks()
             return oldSelection(callback, drops, options)
         end
         print("[AP] Reward selection intercepted")
-
-        local checkName = getCurrentCheck()
+        
+        local checkName, counterKey = getCurrentCheck()
 
         if checkName then
             persistent.archipelago.currentCombatCheck = checkName
@@ -128,6 +129,52 @@ function M.installRewardHooks()
                         "[AP] Replacing reward:",
                         reward.item_name
                     )
+                    
+                    local count = persistent.archipelago.nexus.checks[counterKey] or 0
+
+                    count = count + 1
+
+                    local originalCallback = callback 
+                        callback = function(...)
+                            print("[AP] Selection screen closed. Updating value now!")
+                            if counterKey then
+                                persistent.archipelago.nexus.checks[counterKey] = count
+
+                                saveFileData(
+                                    "persistentSaveData",
+                                    persistent
+                                )
+                            end
+                            
+                            if type(originalCallback) == "function" then
+                                return originalCallback(...)
+                                
+                            elseif type(originalCallback) == "table" then
+                                local item = ...
+                                
+                                if originalCallback.type or originalCallback.save or originalCallback.getUserFunctions then
+                                    local mode = originalCallback
+                                    require 'overworld'
+                                    require 'items'.give(item, 'reward')
+                                    if options and options.bonuses and options.bonuses[item] then
+                                        for i, bonusItem in ipairs(options.bonuses[item]) do
+                                            require 'items'.give(bonusItem, 'bonus')
+                                        end
+                                    end
+                                    setActiveMode(mode)
+                                    if mode.save then
+                                        mode:save()
+                                    end
+                                    return true
+                                else
+                                    return true
+                                end
+                                
+                            else
+                                return true
+                            end
+                        end
+
 
                     local itemDef =
                         require("items").getData("archipelagoItem")

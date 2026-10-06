@@ -19,6 +19,8 @@ local client = APClient("swa_test", "Sternly Worded Adventures", config.server)
 
 local mt = getmetatable(client)
 
+local deathlink = require("mods.archipelago.mount.ap.deathlink")
+
 print("ClientStatus:")
 for k, v in pairs(mt.ClientStatus) do
     print(k, v)
@@ -26,6 +28,17 @@ end
 
 local function S()
     return _G.AP and _G.AP.state
+end
+
+function isDeathlinkOn(slot_data)
+    if slot_data.options.death_link == 1 and config.overrideDeathlink == false then
+        print("Deathlink is enabled!")
+        AP.deathlink_enabled = true
+        return true
+    end
+    print("Deathlink is NOT enabled!")
+    AP.deathlink_enabled = false
+    return false
 end
 
 client:set_socket_connected_handler(function()
@@ -42,15 +55,34 @@ client:set_slot_connected_handler(function(slot_data)
     if not state then return end
 
     print("SLOT CONNECTED (RAW)")
-    print("slot_data:", slot_data)
+    print("slot_data:")
+    for k, v in pairs(slot_data) do
+        print(k, v)
+    end
+
+    print()
+
+    for k, v in pairs(slot_data.unlocked_letters) do
+        print(k, v)
+    end
+
+    persistent.archipelago.unlockedLetters = persistent.archipelago.unlockedLetters or slot_data.unlocked_letters
+    saveFileData("persistentSaveData", persistent)
+
+
+    local tags = {"Lua-APClientPP"}
+    if isDeathlinkOn(slot_data) then
+        tags[#tags + 1] = "DeathLink"
+    end
 
     state.connected = true
     state.slot_data = slot_data
 
     AP.loadSlotData()
 
-    client:ConnectUpdate(7, {"Lua-APClientPP"})
+    client:ConnectUpdate(7, tags)
 end)
+
 
 client:set_items_received_handler(function(items)
     print("RAW ITEM CALLBACK FIRED", #items)
@@ -60,9 +92,28 @@ client:set_items_received_handler(function(items)
     end
 end)
 
--------------------------------------------------
--- API
--------------------------------------------------
+function on_bounced(bounce)
+    if AP.last_deathlink_time ~= nil and tostring(AP.last_deathlink_time) == tostring(bounce.data.time) then
+        print("Own deathlink, ignoring.")
+        return
+    end
+
+    local has_deathlink_tag = false
+    for _, tag in ipairs(bounce.tags or {}) do
+        if tag == "DeathLink" then
+            has_deathlink_tag = true
+            break
+        end
+    end
+
+    if has_deathlink_tag and bounce.data.time then
+        AP.isDeathLinkDeath = true
+        AP.deathlink_received = true
+        print("Received deathlink!")
+    end
+end
+
+client:set_bounced_handler(on_bounced)
 
 function client.check_location(id)
     print("Checking location:", id)
@@ -78,6 +129,17 @@ function client.mark_received(index)
     if state then
         state.items_received[index] = true
     end
+end
+
+function client.send_deathlink_bounce(cause, source)
+    cause = cause or "Sternly Worded Adventures"
+    source = source or config.slot or "Sternly Worded Adventures Player"
+    local time = client.get_server_time()
+    client:Bounce({
+        time = time,
+        cause = cause,
+        source = source
+    }, {}, {}, {"DeathLink"})
 end
 
 client.check_location = nil
@@ -107,5 +169,20 @@ return {
 
     set_goal = function()
         client:StatusUpdate(client.ClientStatus.GOAL)
+    end,
+
+    send_deathlink_bounce = function(cause, source)
+        cause = cause or "Sternly Worded Adventures"
+        source = source or config.slot or "Sternly Worded Adventures Player"
+        local time = client:get_server_time()
+        client:Bounce({
+            time = time,
+            cause = cause,
+            source = source
+        }, {}, {}, {"DeathLink"})
+    end,
+
+    get_server_time = function()
+        client:get_server_time()
     end
 }

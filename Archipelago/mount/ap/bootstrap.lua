@@ -25,6 +25,10 @@ AP.locations = {}
 AP.locationItems = {}
 AP.currentAPReward = nil
 
+AP.isDeathLinkDeath = false
+AP.last_deathlink_time = nil
+AP.deathlink_received = false
+
 
 local function getTierPrefix(level, early, mid, late)
     if level >= 1 and level <= 3 then
@@ -44,7 +48,7 @@ function AP.resolveCheckName(loc)
 
     if not loc then
         print("[AP] No current game location")
-        return nil
+        return nil, nil
     end
 
     local prefix
@@ -142,7 +146,7 @@ function AP.resolveCheckName(loc)
             loc.level
         )
 
-        return nil
+        return nil, nil
     end
 
     local count =
@@ -160,14 +164,14 @@ function AP.resolveCheckName(loc)
 
     if AP.locations[checkName] then
 
-        persistent.archipelago.nexus.checks[counterKey] = count
+        -- persistent.archipelago.nexus.checks[counterKey] = count
 
-        saveFileData(
-            "persistentSaveData",
-            persistent
-        )
+        -- saveFileData(
+        --     "persistentSaveData",
+        --     persistent
+        -- )
 
-        return checkName
+        return checkName, counterKey
 
     end
 
@@ -176,7 +180,7 @@ function AP.resolveCheckName(loc)
         checkName
     )
 
-    return nil
+    return nil, nil
 end
 
 
@@ -331,12 +335,19 @@ print("[AP] client loaded:", AP.client)
 for k,v in pairs(AP.client) do
     print("[AP] client export:", k, v)
 end
+
 AP.client.state = AP.state
 AP.items = APItemsFunctions
 AP.rewards = load("rewards.lua")
 AP.progression = load("progression.lua")
 AP.overworldHooks = load("overworld.lua")
 AP.releaseCondition = load("releasecondition.lua")
+AP.deathlink = load("deathlink.lua")
+AP.tileGenerationHook = load("tilegeneration.lua")
+AP.itemPreservationHook = load("itempreservation.lua")
+
+
+overworldview = require("overworldview")
 
 print("[AP] Running post load hooks")
 
@@ -378,6 +389,31 @@ love.update = function(dt)
 
     end
 
+    if AP.deathlink_received and AP.deathlink_enabled then
+        local location = overworldview.playerCurrentLocation()
+        local parallax = overworldview.getLocationOutsideParallax(location)
+        local flags = overworldview.getLocationParallaxFlags(location, parallax)
+        overworld.startNewRun{
+            parallax = parallax,
+            flags = flags,
+            level = location.level,
+            seed = location.seed,
+            fleeingCountsForCompletion = true,
+            fixedRewards = {},
+            generator = 'default',
+            numBosses = 0,
+            enemySet = location.parentNode.typeData.enemies,
+            enemiesSD = 1,
+            enemiesMean = 1,
+            daylight = overworld.getDaylightStrength(),
+            time = overworld.getTimeOfDay(),
+            setpiece  = { type = 'treant_stump', parallaxStartPos = -10000, name = 'inevitable doom' },
+        }
+        rpg:gameOver()
+        rpg:save()
+        AP.deathlink_received = false
+    end
+
     if activeModeIs'overworld'
     and #APItemsFunctions.pendingOverworldItems > 0 then
         print("[AP] Applying queued items")
@@ -395,30 +431,45 @@ love.update = function(dt)
 
     local ready =
         overworld
+        and type(overworld) == "table" 
         and overworld.recordGoldStats
 
-    if activeModeIs'overworld' and ready and #queue > 0 then
-        print("[AP] Applying queued items")
+    if ready and #queue > 0 then
 
-        while #queue > 0 do
-            local queued = queue[1]
 
+    local i = 1
+
+    if ready and #queue > 0 then
+        local i = 1
+
+        while i <= #queue do
+            local queued = queue[i]
             local def = AP.items.ITEM_DEFS[queued.item]
 
-            if def then
+            if def == nil then
+                print("[AP] Received unknown item:", queued.item)
+                table.remove(queue, i)
+
+            elseif activeModeIs'overworld' and not def.isTrap then
+                print("[AP] Applying item:", def.name)
+
                 def.apply()
+                table.remove(queue, i)
+
+            elseif activeModeIs'rpg' and def.isTrap then
+                i = i + 1
+
             else
-                print("[AP] Unknown queued item:", queued.item)
+                i = i + 1
             end
-
-            table.remove(queue, 1)
-
-            saveFileData(
-                "persistentSaveData",
-                persistent
-            )
         end
     end
+
+    saveFileData(
+        "persistentSaveData",
+        persistent
+    )
+end
 
     local overworld = package.loaded["overworld"]
     local world = package.loaded["utils.world"]
@@ -432,7 +483,13 @@ love.update = function(dt)
             AP.overworldHooks.installOverworldHooks(overworld)
         end
 
+        if not AP.deathHookInstalled then
+            AP.deathlink.installDeathHook()
+        end
+
     end
+
+
 
     return oldUpdate(dt)
 

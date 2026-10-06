@@ -7,6 +7,13 @@ hellPortal.onComplete = function(location)
         apGoalSent = true
         AP.client.set_goal()
         print("[AP] Goal sent: anomaly cleared!")
+    else
+        print("apGoalSent: ", apGoalSent)
+        print("AP variable: ", AP)
+        print("AP.client variable: ", AP.client)
+        print("[AP] One of the requirements to release has not been met!")
     end
     return oldOnComplete(location)
 end
+
+package.loaded["overworld.locations.hellportal"] = hellPortal
