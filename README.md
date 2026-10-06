@@ -1,6 +1,6 @@
-# Sternly Worded Peninsula; Archipelago Support for Sternly Worded Adventures
+# SWAP; Archipelago Support for Sternly Worded Adventures
 
-This is a mod for Sternly Worded Adventures that provides support for the Archipelago Multiworld Randomiser.
+SWAP (Sternly Worded ArchiPelago or Sternly Worded Adventures Peninsula) is a mod for Sternly Worded Adventures that provides support for the Archipelago Multiworld Randomiser.
 The mod has been developed and tested on Sternly Worded Adventures V53, and may not work on past or future versions.
 
 ## Gameplay Changes
