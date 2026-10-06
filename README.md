@@ -1,7 +1,7 @@
 # Sternly Worded Peninsula; Archipelago Support for Sternly Worded Adventures
 
 This is a mod for Sternly Worded Adventures that provides support for the Archipelago Multiworld Randomiser.
-The mod has been developed and tested on Sternly Worded Adventures V52, and may not work on past or future versions.
+The mod has been developed and tested on Sternly Worded Adventures V53, and may not work on past or future versions.
 
 ## Gameplay Changes
 With this mod active, item rewards from locations such as crypt chests, forest chests, chapel ruins, and other loot sources are replaced with Archipelago checks.
@@ -25,8 +25,10 @@ The game should restart with the mod active. You can verify by going to Sandbox 
 
 ## Connecting
 The mod contains a config file called `apconfig.lua`, found in `Archipelago/mount/ap`. Within it are the three basic values needed to connect to an Archipelago Multiworld; the slot name, password, and server. Edit them to the appropriate values.
+If your .yaml file has deathlink enabled, make sure that `overrideDeathlink` is set to `false`.
 Launch the game and, if necessary, start a run. The client should then connect and be ready to send and receive Archipelago checks.
 If the game was already open when editing the `apconfig.lua` file, close and restart it for the changes to register.
 
 ## Miscellaneous Notes
-**NOTE:** When connecting to a new AP room after finishing a run, the game still retains the persistent save data from previous runs. Therefore, before starting a new run, one must wipe the archipelago-related data from their `persistentSaveData` file, found in `AppData/Roaming/SternlyWordedAdventures`. If one wishes to participate in multiple Multiworlds and play SWA in them, back the data up and reinsert it as necessary instead.
+**NOTE:** When connecting to a new AP room after finishing a run, the game still retains the persistent save data from previous runs. Therefore, before starting a new run, one must wipe the archipelago-related data from their `persistentSaveData` file, found in `AppData/Roaming/SternlyWordedAdventures`. Additionally, delete the `archipelago_transfer` file as well. It is in the same directory as `persistentSaveData`.
+If one wishes to participate in multiple Multiworlds and play SWA in them, back that data up and reinsert it as necessary instead.
