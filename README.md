@@ -11,7 +11,7 @@ Travelling between locations is now gated to create progression; at the start of
 If the player runs out of new locations to travel to in order to collect new checks, they can either wait to receive their next tier of Node Access, or they can start a new run to collect more checks in the locations currently accessible to them.
 Keep in mind that the item pool contains far more checks of each location type than can be acquired in a single run. Doing multiple runs is an expected part of progression!
 
-Additionally, this mod introduces a new class to the game; the Wayfarer. Playing as this class is the intended experience for this mod, though you may play as other classes if you wish.
+Additionally, this mod introduces a new class to the game; the Wayfarer. Playing as this class is the intended experience for this mod.
 The Wayfarer has very few items in its item/loot pool, and none are from the vanilla game. Instead, they start with a passive "Nexus Satchel", and each Nexus Charge received, be it from SWA itself or another game in the multiworld, allows the player to withdraw a random item or consumable from the Nexus Satchel, similarly to how the Endless Potion Bag grants random potions.
 
 To complete your Archipelago slot and release any remaining checks, defeat the Anomaly once.
