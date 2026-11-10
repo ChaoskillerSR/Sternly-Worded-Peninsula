@@ -51,8 +51,9 @@ return {
             local pool = moddedItemFunctions.getNexusItemPool()
 
             local selection =
-                require "ui.itemselection"(
-                    function(item)
+                require "ui.itemselect"({
+                    items = table.randomlyReduceDownTo(pool, 3),
+                    give = function(item, items, data)
 
                         itemFunctions.give(item, "reward")
 
@@ -65,15 +66,7 @@ return {
                         end
 
                     end,
-
-                    table.randomlyReduceDownTo(pool, 3),
-
-                    {
-                        hideInventory = true,
-                        modeType = mode.type,
-                        archipelagoIgnoreRewardHook = true,
-                    }
-                )
+                })
 
             setActiveMode(selection)
 

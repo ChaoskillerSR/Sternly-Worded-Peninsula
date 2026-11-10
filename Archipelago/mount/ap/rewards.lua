@@ -74,14 +74,14 @@ function M.installRewardHooks()
 
     print("[AP] Installing reward hook")
 
-    local oldSelection = require("ui.itemselection")
+    local oldSelection = require("ui.itemselect")
 
-    package.loaded["ui.itemselection"] = function(callback, drops, options)
-        if options.archipelagoIgnoreRewardHook then
-            return oldSelection(callback, drops, options)
+    package.loaded["ui.itemselect"] = function(data, givenNextMode)
+        if data.type~='overworld' or data.title then
+            return oldSelection(data, givenNextMode)
         end
         print("[AP] Reward selection intercepted")
-        
+
         local checkName, counterKey = getCurrentCheck()
 
         if checkName then
@@ -129,13 +129,14 @@ function M.installRewardHooks()
                         "[AP] Replacing reward:",
                         reward.item_name
                     )
-                    
+
                     local count = persistent.archipelago.nexus.checks[counterKey] or 0
 
                     count = count + 1
 
-                    local originalCallback = callback 
-                        callback = function(...)
+                    local mode = givenNextMode or getActiveMode()
+                    local originalCallback = data.give
+                        data.give = function(...)
                             print("[AP] Selection screen closed. Updating value now!")
                             if counterKey then
                                 persistent.archipelago.nexus.checks[counterKey] = count
@@ -145,32 +146,26 @@ function M.installRewardHooks()
                                     persistent
                                 )
                             end
-                            
-                            if type(originalCallback) == "function" then
+
+                            if originalCallback then
                                 return originalCallback(...)
-                                
-                            elseif type(originalCallback) == "table" then
+
+                            else
                                 local item = ...
-                                
-                                if originalCallback.type or originalCallback.save or originalCallback.getUserFunctions then
-                                    local mode = originalCallback
+
+                                if mode.type or mode.save or mode.getUserFunctions then
                                     require 'overworld'
                                     require 'items'.give(item, 'reward')
-                                    if options and options.bonuses and options.bonuses[item] then
-                                        for i, bonusItem in ipairs(options.bonuses[item]) do
+                                    if data.bonuses[item] then
+                                        for i, bonusItem in ipairs(data.bonuses[item]) do
                                             require 'items'.give(bonusItem, 'bonus')
                                         end
                                     end
                                     setActiveMode(mode)
-                                    if mode.save then
+                                    if data.save and mode.save then
                                         mode:save()
                                     end
-                                    return true
-                                else
-                                    return true
                                 end
-                                
-                            else
                                 return true
                             end
                         end
@@ -194,7 +189,7 @@ function M.installRewardHooks()
                             reward.game_name
                         )
 
-                    drops = {
+                    data.items = {
                         "archipelagoItem"
                     }
 
@@ -216,7 +211,7 @@ function M.installRewardHooks()
             print("[AP] No check resolved")
         end
 
-        return oldSelection(callback, drops, options)
+        return oldSelection(data, givenNextMode)
 
     end
 
