@@ -76,7 +76,7 @@ function M.installRewardHooks()
 
     local oldSelection = require("ui.itemselect")
 
-    package.loaded["ui.itemselection"] = function(data, givenNextMode)
+    package.loaded["ui.itemselect"] = function(data, givenNextMode)
         if data.type~='overworld' or data.title then
             return oldSelection(data, givenNextMode)
         end
